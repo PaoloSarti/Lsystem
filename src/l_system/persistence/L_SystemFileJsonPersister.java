@@ -5,19 +5,20 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
 
-public class L_SystemJsonPersister implements L_SystemPersister {
+public class L_SystemFileJsonPersister implements L_SystemPersister {
 
 	private final String lastState = "lastState.restore";
 	private String directory;
 	private Gson gson;
 	
-	public L_SystemJsonPersister(String directory) {
+	public L_SystemFileJsonPersister(String directory) {
 		super();
 		this.directory = directory;
 		setGson(new Gson());
@@ -46,7 +47,28 @@ public class L_SystemJsonPersister implements L_SystemPersister {
 		WindowRestore loaded;
 		FileInputStream fin;
 		fin = new FileInputStream(lastState);
-		loaded = gson.fromJson(new InputStreamReader(fin), WindowRestore.class);
+		
+		try
+		{
+			loaded = gson.fromJson(new InputStreamReader(fin), WindowRestore.class);
+		}
+		catch(Exception e)
+		{
+			fin.close();
+			
+			//try the old Object Way
+			fin=new FileInputStream(lastState);
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			try {
+				loaded= (WindowRestore) ois.readObject();
+			} catch (ClassNotFoundException e1) {
+				throw new IOException("Class not found");
+			}
+			finally
+			{
+				ois.close();
+			}
+		}
 		return loaded;
 	}
 
@@ -69,10 +91,31 @@ public class L_SystemJsonPersister implements L_SystemPersister {
 
 	private L_System loadL_System(String fileName) throws IOException
 	{
-		L_System loaded;
+		L_System loaded=null;
 		FileInputStream fin;
 		fin = new FileInputStream(fileName);
-		loaded = gson.fromJson(new InputStreamReader(fin), L_System.class);
+		try
+		{
+			loaded = gson.fromJson(new InputStreamReader(fin), L_System.class);
+		}
+		catch(Exception e)	//if it is not JSON
+		{
+			fin.close();
+			
+			//try the old Object Way
+			fin=new FileInputStream(fileName);
+			ObjectInputStream ois = new ObjectInputStream(fin);
+			try {
+				loaded= (L_System) ois.readObject();
+			} catch (ClassNotFoundException e1) {
+				throw new IOException("Class not found");
+			}
+			finally
+			{
+				ois.close();
+			}
+		}
+		
 		return loaded;
 		
 	}
