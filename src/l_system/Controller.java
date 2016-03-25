@@ -22,6 +22,8 @@ import javax.swing.JScrollPane;
 
 
 
+
+import timeOffset.TimeOffset;
 //import timeOffset.TimeOffset;
 import l_system.gui.IOPanel;
 import l_system.gui.TurtlePanel;
@@ -37,8 +39,11 @@ public class Controller implements WindowListener
 	private List<L_System> l_systems;
 	private StringProcessingThread stringProcessingThread;
 	private boolean restoring;
-	//private TimeOffset to;
+	private TimeOffset to;
+	private long millisecondsLastCalculations=0;
 	
+
+
 	public Controller() 
 	{
 		this.frame=new JFrame("L-System");
@@ -115,7 +120,7 @@ public class Controller implements WindowListener
 		ioPanel.showProgressBar();
 		String command=null;
 		stringProcessingThread = new StringProcessingThread(axiom, rules, nIterations,probabilityToMiss, command, this);
-		//to=new TimeOffset();
+		to=new TimeOffset();
 		stringProcessingThread.start();
 	}
 	
@@ -132,13 +137,15 @@ public class Controller implements WindowListener
 		stringProcessingThread = new StringProcessingThread(l_system.getAxiom(),
 					l_system.getRules(), l_system.getnIterations()
 					,l_system.getProbabilityToMiss(), command, this);
-		//to=new TimeOffset();
+		to=new TimeOffset();
 		stringProcessingThread.start();
 	}
 	
 	public void drawCommand(String command)
 	{
-		//System.out.println("Milliseconds to process String: "+to.getOffsetMillis());
+		this.millisecondsLastCalculations=to.getOffsetMillis();
+		System.out.println("Milliseconds to process String: "+this.millisecondsLastCalculations);
+		this.ioPanel.setMilliseconds(millisecondsLastCalculations);
 		if(!this.stringProcessingThread.isInterrupted())
 		{
 			drawer.draw(stringProcessingThread.getCommand(), 0.05, ioPanel.getAngle(), turtle.getStartingPoint(),
@@ -146,6 +153,8 @@ public class Controller implements WindowListener
 			restoring=false;
 		}
 		ioPanel.HideProgressBar();
+		stringProcessingThread=null;
+		System.gc();
 	}
 
 	public void saveL_System(L_System l_system)
@@ -364,6 +373,11 @@ public class Controller implements WindowListener
 		
 	}
 
+	
+	public long getMillisecondsLastCalculations() {
+		return millisecondsLastCalculations;
+	}
+	
 	public JFrame getFrame() 
 	{
 		return this.frame;

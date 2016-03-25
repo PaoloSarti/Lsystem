@@ -53,6 +53,7 @@ public class IOPanel extends JPanel implements ActionListener
 	private JProgressBar progressBar;
 	private JFileChooser fileChooser;
 	private char invisibleChar;
+	private JLabel millisecondsLabel;
 	
 	public IOPanel(Controller controller, TurtlePanel turtle)
 	{
@@ -64,7 +65,7 @@ public class IOPanel extends JPanel implements ActionListener
 		this.fileChooser=new JFileChooser();
 		this.invisibleChar=' '; //di default tengo questo, che in realtà è un carattere ignorato dal drawer
 		
-		upperPanel= new JPanel(new GridLayout(11, 1));
+		upperPanel= new JPanel(new GridLayout(12, 1));
 		this.add(upperPanel, BorderLayout.NORTH);
 		
 		JLabel axiomLabel = new JLabel(" Axiom:");
@@ -107,6 +108,9 @@ public class IOPanel extends JPanel implements ActionListener
 		openSavePanel.add(saveButton);
 		saveImageButton = new JButton("Save Image");
 		openSavePanel.add(saveImageButton);
+		
+		this.millisecondsLabel= new JLabel("Elapsed millis: ");
+		upperPanel.add(millisecondsLabel);
 		
 		this.progressBar=new JProgressBar();
 		progressBar.setIndeterminate(true);
@@ -248,6 +252,11 @@ public class IOPanel extends JPanel implements ActionListener
 		return angle;
 	}
 
+	public void setMilliseconds(long milliseconds)
+	{
+		this.millisecondsLabel.setText("Elapsed millis: "+milliseconds);
+	}
+	
 	public void setAxiom(String axiom) 
 	{
 		this.axiom = axiom;

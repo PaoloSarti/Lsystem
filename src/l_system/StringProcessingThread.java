@@ -1,5 +1,6 @@
 package l_system;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,7 +88,7 @@ public class StringProcessingThread extends Thread
 	private List<CharReplace> charsFromString()
 	{
 		//struttura di supporto
-		List<CharReplace> elaboratedAxiom = new LinkedList<CharReplace>();
+		List<CharReplace> elaboratedAxiom = new ArrayList<CharReplace>();
 					
 		for(int i=0; i<axiom.length(); i++)
 		{
