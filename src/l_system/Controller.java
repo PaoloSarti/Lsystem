@@ -41,7 +41,7 @@ public class Controller implements WindowListener
 	private boolean restoring;
 	private TimeOffset to;
 	private long millisecondsLastCalculations=0;
-	
+	private String saveFolder=".";
 
 
 	public Controller() 
@@ -58,7 +58,7 @@ public class Controller implements WindowListener
 	
 	public void start()
 	{
-		File dir = new File(".");
+		File dir = new File(saveFolder);
 		String[] fileNames = dir.list();
 		WindowRestore restore=null;
 		try 
