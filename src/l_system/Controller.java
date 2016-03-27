@@ -5,11 +5,8 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +25,8 @@ import timeOffset.TimeOffset;
 import l_system.gui.IOPanel;
 import l_system.gui.TurtlePanel;
 import l_system.persistence.L_System;
+import l_system.persistence.L_SystemFileJsonPersister;
+import l_system.persistence.L_SystemPersister;
 import l_system.persistence.WindowRestore;
 
 public class Controller implements WindowListener
@@ -42,7 +41,7 @@ public class Controller implements WindowListener
 	private TimeOffset to;
 	private long millisecondsLastCalculations=0;
 	private String saveFolder=".";
-
+	private L_SystemPersister persister;
 
 	public Controller() 
 	{
@@ -51,6 +50,7 @@ public class Controller implements WindowListener
 		this.drawer=new L_SystemDrawer(turtle);
 		this.l_systems= new LinkedList<L_System>();
 		this.ioPanel=new IOPanel(this, turtle);
+		this.persister= new L_SystemFileJsonPersister(saveFolder);
 		frame.addWindowListener(this);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.restoring=true;
@@ -58,34 +58,16 @@ public class Controller implements WindowListener
 	
 	public void start()
 	{
-		File dir = new File(saveFolder);
-		String[] fileNames = dir.list();
 		WindowRestore restore=null;
-		try 
+		try
 		{
-			for(String fileName : fileNames)
-			{
-				if(fileName.endsWith(".lsy"))
-				{
-					FileInputStream fin;
-					fin = new FileInputStream(fileName);
-					ObjectInputStream ois = new ObjectInputStream(fin);
-					this.l_systems.add(  (L_System) ois.readObject());
-					ois.close();
-				}
-				else if(fileName.equals("lastState.restore"))
-				{
-					FileInputStream fin;
-					fin = new FileInputStream(fileName);
-					ObjectInputStream ois = new ObjectInputStream(fin);
-					restore = (WindowRestore) ois.readObject();
-					ois.close();
-				}
-			}
-		} 
-		catch (IOException | ClassNotFoundException e) 
+			this.l_systems=persister.loadL_Systems();
+			restore=persister.restoreWindow();
+		}
+		catch (IOException e1) 
 		{
-			e.printStackTrace();
+			this.l_systems= new ArrayList<L_System>();
+			e1.printStackTrace();
 		}
 		finally
 		{
@@ -189,11 +171,7 @@ public class Controller implements WindowListener
 			
 			if(overwrite||!sameName)
 			{
-				FileOutputStream fout;
-				fout = new FileOutputStream(l_system.getName().trim()+".lsy");
-				ObjectOutputStream oos = new ObjectOutputStream(fout);   
-				oos.writeObject(l_system);
-				oos.close();
+				persister.persist(l_system);
 			}
 		} 
 		catch (IOException e) 
@@ -219,11 +197,7 @@ public class Controller implements WindowListener
 		
 		try 
 		{
-			FileOutputStream fout;
-			fout = new FileOutputStream(lastState.getName().trim()+".restore");
-			ObjectOutputStream oos = new ObjectOutputStream(fout);   
-			oos.writeObject(windowRestore);
-			oos.close();
+			persister.persist(windowRestore);
 		} 
 		catch (IOException e) 
 		{
@@ -381,6 +355,14 @@ public class Controller implements WindowListener
 	public JFrame getFrame() 
 	{
 		return this.frame;
+	}
+
+	public L_SystemPersister getPersister() {
+		return persister;
+	}
+
+	public void setPersister(L_SystemPersister persister) {
+		this.persister = persister;
 	}
 
 
