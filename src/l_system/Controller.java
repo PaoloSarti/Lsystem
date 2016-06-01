@@ -28,6 +28,8 @@ import l_system.persistence.L_System;
 import l_system.persistence.L_SystemFileJsonPersister;
 import l_system.persistence.L_SystemPersister;
 import l_system.persistence.WindowRestore;
+import l_system.processing.StringProcessingListener;
+import l_system.processing.StringProcessingThread;
 
 public class Controller implements WindowListener, StringProcessingListener
 {

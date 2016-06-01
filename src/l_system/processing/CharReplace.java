@@ -1,4 +1,4 @@
-package l_system;
+package l_system.processing;
 
 public class CharReplace 
 {
