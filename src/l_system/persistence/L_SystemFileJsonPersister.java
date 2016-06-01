@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 public class L_SystemFileJsonPersister implements L_SystemPersister {
 
 	private final String lastState = "lastState.restore";
+	private final String samples="samples";
 	private String directory;
 	private Gson gson;
 	
@@ -81,11 +82,32 @@ public class L_SystemFileJsonPersister implements L_SystemPersister {
 
 		for(String fileName : fileNames)
 		{
+			if(fileName.equals(samples))
+			{
+				String sep=System.getProperty("file.separator");
+				String subDir=directory+sep+samples;
+				File samplesDir=new File(subDir);
+				
+				String[] otherFileNames=samplesDir.list();
+				
+				if(otherFileNames!=null)
+				{
+					for(String otherFile : otherFileNames)
+					{
+						if(otherFile.endsWith(".lsy"))
+						{
+							l.add(this.loadL_System(subDir+sep+otherFile));
+						}
+					}
+				}
+			}
+			
 			if(fileName.endsWith(".lsy"))
 			{
 				l.add(this.loadL_System(fileName));
 			}
 		}
+		
 		return l;
 	}
 
