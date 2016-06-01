@@ -16,19 +16,23 @@ public class L_SystemFileJsonPersister implements L_SystemPersister {
 
 	private final String lastState = "lastState.restore";
 	private final String samples="samples";
+	private String sep;
 	private String directory;
+	private String subDir;
 	private Gson gson;
 	
 	public L_SystemFileJsonPersister(String directory) {
 		super();
 		this.directory = directory;
+		this.sep=System.getProperty("file.separator");
+		this.subDir=directory+sep+samples;
 		setGson(new Gson());
 	}
 
 	@Override
 	public void persist(L_System lsystem) throws IOException {
 		FileOutputStream fout;
-		fout = new FileOutputStream(lsystem.getName().trim()+".lsy");
+		fout = new FileOutputStream(subDir+sep+lsystem.getName().trim()+".lsy");
 		PrintWriter pw = new PrintWriter(fout);   
 		pw.write(gson.toJson(lsystem, L_System.class));
 		pw.close();
@@ -84,8 +88,6 @@ public class L_SystemFileJsonPersister implements L_SystemPersister {
 		{
 			if(fileName.equals(samples))
 			{
-				String sep=System.getProperty("file.separator");
-				String subDir=directory+sep+samples;
 				File samplesDir=new File(subDir);
 				
 				String[] otherFileNames=samplesDir.list();

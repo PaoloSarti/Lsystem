@@ -1,1 +1,1 @@
-{"name":"Seaweed","axiom":"F","rules":["F\u003dFF+[+F-F-F]-[-F+F+F]"],"nIterations":4,"angle":0.3839724354387525,"startingPoint":{"x":0.38562720715942944,"y":1.0,"visible":false,"color":{"value":-16777216,"falpha":0.0}},"zoom":0.3564201965330025,"probabilityToMiss":0.0,"invisibleChar":" "}
+{"name":"Seaweed","axiom":"F","rules":["F\u003dFF+[+F-F-F]-[-F+F+F]"],"nIterations":4,"angle":0.3839724354387525,"startingPoint":{"x":0.6143727928405704,"y":1.0,"visible":false,"color":{"value":-16777216,"falpha":0.0}},"zoom":0.3564201965330025,"probabilityToMiss":0.0,"invisibleChar":" "}
