@@ -1,0 +1,1 @@
+{"name":"Gosper Curve","axiom":"A","rules":["A\u003dA+B++B-A--AA-B+","B\u003d-A+BB++B+A--A-B"],"nIterations":4,"angle":1.0471975511965976,"startingPoint":{"x":0.029003727766356957,"y":0.3596491228070184,"visible":false,"color":{"value":-16777216,"falpha":0.0}},"zoom":0.3508771929824563,"probabilityToMiss":0.0,"invisibleChar":" "}
