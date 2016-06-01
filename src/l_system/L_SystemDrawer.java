@@ -65,7 +65,7 @@ public class L_SystemDrawer
 								turtle.moveTurtleForward(distance*forwardInvisible, false);
 								forwardInvisible=0;
 							}
-							turtle.rotateTurtle(-angle); break;
+							turtle.rotateTurtle(+angle); break;
 				
 				case '-': 	if(forward>0)
 							{
@@ -77,7 +77,7 @@ public class L_SystemDrawer
 								turtle.moveTurtleForward(distance*forwardInvisible, false);
 								forwardInvisible=0;
 							}
-							turtle.rotateTurtle(+angle); break;
+							turtle.rotateTurtle(-angle); break;
 				
 				case '[': 	if(forward>0)
 							{

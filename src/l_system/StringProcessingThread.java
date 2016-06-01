@@ -38,7 +38,11 @@ public class StringProcessingThread extends Thread
 		{
 			String[] ruleSplitted=rule.split("=");
 			char toReplace = ruleSplitted[0].charAt(0); //si suppone che sia di un solo carattere
-			String replaceWith = ruleSplitted[1];
+			String replaceWith="";
+			if(ruleSplitted.length==2)
+			{
+				replaceWith= ruleSplitted[1];
+			}
 			rulesMap.put(toReplace, replaceWith);
 		}
 	}
