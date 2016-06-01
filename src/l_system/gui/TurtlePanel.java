@@ -16,8 +16,10 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 
+import l_system.Turtle;
 
-public class TurtlePanel extends JPanel implements MouseWheelListener, MouseMotionListener, MouseListener
+
+public class TurtlePanel extends JPanel implements MouseWheelListener, MouseMotionListener, MouseListener, Turtle
 {
 	private static final long serialVersionUID = 1L;
 

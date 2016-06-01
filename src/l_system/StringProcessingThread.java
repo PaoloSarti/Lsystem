@@ -18,19 +18,19 @@ public class StringProcessingThread extends Thread
 	private int n;
 	private double probabilityToMiss;
 	private String command;
-	private Controller controller;
+	private StringProcessingListener processingListener;
 	private int nAvaiableProcessors;
 	private StringBuilderThread[] stringBuilders;
 	//private TimeOffset timeOffset;
 	private FinderReplacer[] findersReplacers;
 	
-	public StringProcessingThread(String axiom, List<String> rules, int n, double probabilityToMiss, String command, Controller controller)
+	public StringProcessingThread(String axiom, List<String> rules, int n, double probabilityToMiss, String command, StringProcessingListener controller)
 	{
 		this.axiom=axiom;
 		this.n=n;
 		this.probabilityToMiss=probabilityToMiss;
 		this.command=null;
-		this.controller=controller;
+		this.processingListener=controller;
 		this.nAvaiableProcessors=Runtime.getRuntime().availableProcessors();
 		this.stringBuilders = new StringBuilderThread[nAvaiableProcessors];
 		this.rulesMap= new HashMap<Character, String>();
@@ -86,7 +86,7 @@ public class StringProcessingThread extends Thread
 
 		//System.out.println(timeOffset.getOffsetMillis());
 		if(command!=null)
-			controller.drawCommand(command);
+			processingListener.finishedStringProcessing(command);
 	}
 	
 	private List<CharReplace> charsFromString()

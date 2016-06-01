@@ -29,7 +29,7 @@ import l_system.persistence.L_SystemFileJsonPersister;
 import l_system.persistence.L_SystemPersister;
 import l_system.persistence.WindowRestore;
 
-public class Controller implements WindowListener
+public class Controller implements WindowListener, StringProcessingListener
 {
 	private L_SystemDrawer drawer;
 	private JFrame frame;
@@ -123,7 +123,7 @@ public class Controller implements WindowListener
 		stringProcessingThread.start();
 	}
 	
-	public void drawCommand(String command)
+	public void finishedStringProcessing(String command)
 	{
 		this.millisecondsLastCalculations=to.getOffsetMillis();
 		System.out.println("Milliseconds to process String: "+this.millisecondsLastCalculations);

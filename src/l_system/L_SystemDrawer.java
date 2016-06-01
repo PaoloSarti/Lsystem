@@ -6,16 +6,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import l_system.gui.ProportionPoint;
-import l_system.gui.TurtlePanel;
-
 
 public class L_SystemDrawer 
 {
 	//private static final String forwardChars="qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890";
-	private TurtlePanel turtle;
+	private Turtle turtle;
 	private Map<Character, Color> charColor;//TODO
 	
-	public L_SystemDrawer(TurtlePanel turtle)
+	public L_SystemDrawer(Turtle turtle)
 	{
 		this.turtle=turtle;
 		charColor=new HashMap<Character, Color>();
