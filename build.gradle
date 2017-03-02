@@ -2,6 +2,9 @@ group 'it.paolosarti'
 version '0.9'
 
 apply plugin: 'java'
+apply plugin: 'application'
+
+mainClassName = "l_system.Program"
 
 sourceCompatibility = 1.8
 
