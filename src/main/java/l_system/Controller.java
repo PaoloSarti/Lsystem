@@ -11,15 +11,10 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 
 
-
-
-
-
+import l_system.processing.LSystemProcessing;
 import timeOffset.TimeOffset;
 //import timeOffset.TimeOffset;
 import l_system.gui.IOPanel;
@@ -29,7 +24,6 @@ import l_system.persistence.L_SystemFileJsonPersister;
 import l_system.persistence.L_SystemPersister;
 import l_system.persistence.WindowRestore;
 import l_system.processing.StringProcessingListener;
-import l_system.processing.StringProcessingThread;
 
 public class Controller implements WindowListener, StringProcessingListener
 {
@@ -38,7 +32,8 @@ public class Controller implements WindowListener, StringProcessingListener
 	private TurtlePanel turtle;
 	private IOPanel ioPanel;
 	private List<L_System> l_systems;
-	private StringProcessingThread stringProcessingThread;
+	//private StringProcessingThread process;
+	private LSystemProcessing process;
 	private boolean restoring;
 	private TimeOffset to;
 	private long millisecondsLastCalculations=0;
@@ -56,6 +51,7 @@ public class Controller implements WindowListener, StringProcessingListener
 		frame.addWindowListener(this);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.restoring=true;
+		this.process = new LSystemProcessing();
 	}
 	
 	public void start()
@@ -99,30 +95,26 @@ public class Controller implements WindowListener, StringProcessingListener
 			JOptionPane.showMessageDialog(null, "Check the arguments!");
 			return;
 		}
-		if(stringProcessingThread!=null&&stringProcessingThread.isAlive())
-			stringProcessingThread.interrupt();
+		if(process !=null)
+			process.stop();
 		ioPanel.showProgressBar();
-		String command=null;
-		stringProcessingThread = new StringProcessingThread(axiom, rules, nIterations,probabilityToMiss, command, this);
+		process.startProcessing(axiom, rules, nIterations, probabilityToMiss, this);
+		//process = new StringProcessingThread(axiom, rules, nIterations,probabilityToMiss,this);
 		to=new TimeOffset();
-		stringProcessingThread.start();
+		//process.start();
 	}
 	
-	public void startDrawing(L_System l_system)
+	private void startDrawing(L_System l_system)
 	{
 		if(!l_system.isValid())
 		{
 			return;
 		}
-		if(stringProcessingThread!=null)
-			stringProcessingThread.interrupt();
+		if(process !=null)
+			process.stop();
 		ioPanel.showProgressBar();
-		String command=null;
-		stringProcessingThread = new StringProcessingThread(l_system.getAxiom(),
-					l_system.getRules(), l_system.getnIterations()
-					,l_system.getProbabilityToMiss(), command, this);
+		process.startProcessing(l_system.getAxiom(), l_system.getRules(), l_system.getnIterations(), l_system.getProbabilityToMiss(), this);
 		to=new TimeOffset();
-		stringProcessingThread.start();
 	}
 	
 	public void finishedStringProcessing(String command)
@@ -130,14 +122,10 @@ public class Controller implements WindowListener, StringProcessingListener
 		this.millisecondsLastCalculations=to.getOffsetMillis();
 		System.out.println("Milliseconds to process String: "+this.millisecondsLastCalculations);
 		this.ioPanel.setMilliseconds(millisecondsLastCalculations);
-		if(!this.stringProcessingThread.isInterrupted())
-		{
-			drawer.draw(stringProcessingThread.getCommand(), 0.05, ioPanel.getAngle(), turtle.getStartingPoint(),
-					turtle.getZoom(),ioPanel.getInvisibleChar(), !restoring||ioPanel.getProbabilityToMiss()>0);
-			restoring=false;
-		}
+		drawer.draw(command, 0.05, ioPanel.getAngle(), turtle.getStartingPoint(),
+				turtle.getZoom(),ioPanel.getInvisibleChar(), !restoring||ioPanel.getProbabilityToMiss()>0);
+		restoring=false;
 		ioPanel.HideProgressBar();
-		stringProcessingThread=null;
 		System.gc();
 	}
 
@@ -147,7 +135,7 @@ public class Controller implements WindowListener, StringProcessingListener
 		{
 			boolean overwrite=false;
 			boolean sameName=false;
-			for(int i=0; i<l_systems.size()&&sameName==false; i++)
+			for(int i=0; i<l_systems.size()&&!sameName; i++)
 			{
 				if(l_systems.get(i).getName().equals(l_system.getName()))
 				{
@@ -166,7 +154,7 @@ public class Controller implements WindowListener, StringProcessingListener
 			}
 
 			
-			if(sameName==false)
+			if(!sameName)
 			{
 				this.l_systems.add(l_system);
 			}
@@ -206,7 +194,7 @@ public class Controller implements WindowListener, StringProcessingListener
 			JOptionPane.showMessageDialog(null, "The file couldn't be saved");
 			e.printStackTrace();
 		}
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 	}
 	
 
@@ -227,16 +215,13 @@ public class Controller implements WindowListener, StringProcessingListener
 	
 	private boolean validArguments(String axiom, List<String> rules, int nIterations, double angle, double probabilityToMiss)
 	{
-		if(axiom!=null
+		return axiom!=null
 				&&!axiom.equals("")
 				&&rules!=null
 				&&this.validRules(rules)
 				&&nIterations>=0
 				&&probabilityToMiss>=0
-				&&probabilityToMiss<=1)
-			return true;
-		else
-			return false;
+				&&probabilityToMiss<=1;
 	}
 	
 	private boolean validRules(List<String> rules)
@@ -307,8 +292,8 @@ public class Controller implements WindowListener, StringProcessingListener
 	
 	public void stopStringProcess()
 	{
-		if(this.stringProcessingThread!=null&&this.stringProcessingThread.isAlive())
-			this.stringProcessingThread.interrupt();
+		if(this.process !=null/*&&this.process.isAlive()*/)
+			this.process.stop();//.interrupt();
 	}
 	
 	//All these WindowListener methods are not useful for the program's purposes
@@ -348,24 +333,10 @@ public class Controller implements WindowListener, StringProcessingListener
 		// TODO Auto-generated method stub
 		
 	}
-
-	
-	public long getMillisecondsLastCalculations() {
-		return millisecondsLastCalculations;
-	}
 	
 	public JFrame getFrame() 
 	{
 		return this.frame;
 	}
-
-	public L_SystemPersister getPersister() {
-		return persister;
-	}
-
-	public void setPersister(L_SystemPersister persister) {
-		this.persister = persister;
-	}
-
 
 }
