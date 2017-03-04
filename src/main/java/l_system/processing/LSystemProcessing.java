@@ -6,10 +6,14 @@ import java.util.concurrent.Executors;
 
 
 public class LSystemProcessing {
-    StreamLsystem ls = new StreamLsystem();
+    LSystemCalc ls;
+
+    public LSystemProcessing(LSystemCalc ls){
+        this.ls=ls;
+    }
 
     public void startProcessing(String axiom, List<String> rules, int n, double probabilityToMiss, StringProcessingListener controller){
-        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(()->{
             try {
                 String command = ls.lsystem(axiom, rules, n, probabilityToMiss);

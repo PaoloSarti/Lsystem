@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class StreamLsystem{
+public class StreamLsystem implements LSystemCalc{
     private boolean stopped = false;
 
     class CharReplace{
@@ -29,7 +29,10 @@ public class StreamLsystem{
                 if(!stopped)
                     lsys = applyRule(lsys, c, splittedRules.get(c), probabilityToMiss);
             }
-            lsys = lsys.map(cr->new CharReplace(cr.c,false));
+            lsys = lsys.map(cr->{
+                cr.replaced=false;
+                return cr;
+            });
         }
         return joinChars(lsys.collect(Collectors.toList()));
     }
@@ -60,6 +63,11 @@ public class StreamLsystem{
         return s.toString();
     }
 
+    /*
+    private String joinChars(Stream<CharReplace> chars){
+        chars.map(cr->cr.c).reduce("",(a,b)->a.toString()+b.toString());
+    }*/
+
     private Map<Character,String> splitRules(List<String> rules) {
         Map<Character, String> m = new HashMap<>();
         for(String rule : rules){
@@ -69,9 +77,9 @@ public class StreamLsystem{
         return m;
     }
 
-    private List<CharReplace> lsList(String axiom, boolean b) {
+    private List<CharReplace> lsList(String s, boolean b) {
         List<CharReplace> chars = new ArrayList<>();
-        for(char c : axiom.toCharArray()){
+        for(char c : s.toCharArray()){
             chars.add(new CharReplace(c, b));
         }
         return chars;

@@ -15,6 +15,7 @@ import javax.swing.*;
 
 
 import l_system.processing.LSystemProcessing;
+import l_system.processing.StreamLsystem;
 import timeOffset.TimeOffset;
 //import timeOffset.TimeOffset;
 import l_system.gui.IOPanel;
@@ -45,13 +46,13 @@ public class Controller implements WindowListener, StringProcessingListener
 		this.frame=new JFrame("L-System");
 		this.turtle=new TurtlePanel();
 		this.drawer=new L_SystemDrawer(turtle);
-		this.l_systems= new LinkedList<L_System>();
+		this.l_systems= new LinkedList<>();
 		this.ioPanel=new IOPanel(this, turtle);
 		this.persister= new L_SystemFileJsonPersister(saveFolder);
 		frame.addWindowListener(this);
 		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		this.restoring=true;
-		this.process = new LSystemProcessing();
+		this.process = new LSystemProcessing(new StreamLsystem());
 	}
 	
 	public void start()
