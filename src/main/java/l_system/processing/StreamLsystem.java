@@ -34,7 +34,7 @@ public class StreamLsystem implements LSystemCalc{
                 return cr;
             });
         }
-        return joinChars(lsys.collect(Collectors.toList()));
+        return lsys.map(cr->String.valueOf(cr.c)).collect(Collectors.joining());//joinChars(lsys.collect(Collectors.toList()));
     }
 
     private Stream<CharReplace> applyRule(Stream<CharReplace> lsys, Character ch, String s, double probabilityToMiss) {
@@ -54,19 +54,6 @@ public class StreamLsystem implements LSystemCalc{
     public void stop(){
         this.stopped=true;
     }
-
-    private String joinChars(List<CharReplace> lsys) {
-        StringBuilder s = new StringBuilder();
-        for(CharReplace cr : lsys){
-            s.append(cr.c);
-        }
-        return s.toString();
-    }
-
-    /*
-    private String joinChars(Stream<CharReplace> chars){
-        chars.map(cr->cr.c).reduce("",(a,b)->a.toString()+b.toString());
-    }*/
 
     private Map<Character,String> splitRules(List<String> rules) {
         Map<Character, String> m = new HashMap<>();
