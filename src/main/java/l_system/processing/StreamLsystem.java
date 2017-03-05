@@ -22,6 +22,7 @@ public class StreamLsystem implements LSystemCalc{
 
     public String lsystem(String axiom, List<String> rules, int iterations, double probabilityToMiss) {
         stopped=false;
+        Map<Character,String> charStrings = charStringMap(axiom, rules);
         Stream<CharReplace> lsys = lsList(axiom, false).parallelStream();
         Map<Character, String> splittedRules = splitRules(rules);
         for(int i=0; i<iterations && !stopped; i++){
@@ -34,7 +35,7 @@ public class StreamLsystem implements LSystemCalc{
                 return cr;
             });
         }
-        return lsys.map(cr->String.valueOf(cr.c)).collect(Collectors.joining());//joinChars(lsys.collect(Collectors.toList()));
+        return lsys.map(cr->charStrings.get(cr.c)).collect(Collectors.joining());//joinChars(lsys.collect(Collectors.toList()));
     }
 
     private Stream<CharReplace> applyRule(Stream<CharReplace> lsys, Character ch, String s, double probabilityToMiss) {
@@ -70,5 +71,20 @@ public class StreamLsystem implements LSystemCalc{
             chars.add(new CharReplace(c, b));
         }
         return chars;
+    }
+
+    private Map<Character,String> charStringMap(String axiom, List<String> rules){
+        Map<Character, String> map = new HashMap<>();
+        putCharsInMap(axiom, map);
+        for(String rule : rules){
+            putCharsInMap(rule, map);
+        }
+        return map;
+    }
+
+    private void putCharsInMap(String chars, Map<Character,String> map){
+        for(char c : chars.toCharArray()){
+            map.put(c,String.valueOf(c));
+        }
     }
 }
