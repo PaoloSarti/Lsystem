@@ -38,9 +38,9 @@ public class TurtlePanel extends JPanel implements MouseWheelListener, MouseMoti
 	{
 		super();
 		this.turtleAngle=Math.PI;
-		this.proportionPoints=new ArrayList<ProportionPoint>();
-		this.stackPoints= new  LinkedList<ProportionPoint>();
-		this.stackAngles = new LinkedList<Double>();
+		this.proportionPoints=new ArrayList<>();
+		this.stackPoints= new  LinkedList<>();
+		this.stackAngles = new LinkedList<>();
 		this.startingPoint=new ProportionPoint(0.5, 0.5, true);
 		this.zoom=1;
 		this.repainting=false;
@@ -72,7 +72,7 @@ public class TurtlePanel extends JPanel implements MouseWheelListener, MouseMoti
 					y0=this.proportionToPixels(startingPoint.getY()+zoom*proportionPoints.get(i).getY(), minLength);
 					x1=this.proportionToPixels(startingPoint.getX()+zoom*proportionPoints.get(i+1).getX(), minLength);
 					y1=this.proportionToPixels(startingPoint.getY()+zoom*proportionPoints.get(i+1).getY(), minLength);
-					//se almeno uno è visibile, e non sono lo stesso punto
+					//se almeno uno visibile, e non sono lo stesso punto
 					if((this.isVisiblePoint(x0, y0)||this.isVisiblePoint(x1, y1))&&!(x0==x1&&y0==y1))
 						g.drawLine( x0,y0,x1,y1);
 				}
@@ -146,9 +146,10 @@ public class TurtlePanel extends JPanel implements MouseWheelListener, MouseMoti
 	
 	public void clear()
 	{
-		this.proportionPoints.clear();
-		this.stackAngles.clear();
-		this.stackPoints.clear();
+		//Throw away the old references hoping that the Garbage collector will free the rest
+		this.proportionPoints = new ArrayList<>();//.clear();
+		this.stackAngles = new LinkedList<>(); //.clear();
+		this.stackPoints = new LinkedList<>(); //clear();
 		this.turtleAngle=Math.PI;
 		this.repaint();
 	}
@@ -219,7 +220,7 @@ public class TurtlePanel extends JPanel implements MouseWheelListener, MouseMoti
 		this.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
 	}
 
-	//lowest rispetto a y, in realtà è in alto
+	//lowest rispetto a y, in realt in alto
 	public double proportionLowest()
 	{
 		double lowest;
@@ -231,7 +232,7 @@ public class TurtlePanel extends JPanel implements MouseWheelListener, MouseMoti
 		}
 		return lowest;
 	}
-	//highest rispetto a y, in realtà è in basso
+	//highest rispetto a y, in realt in basso
 	public double proportionHighest()
 	{
 		double highest;
