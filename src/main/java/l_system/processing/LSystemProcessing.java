@@ -12,11 +12,11 @@ public class LSystemProcessing {
         this.ls=ls;
     }
 
-    public void startProcessing(String axiom, List<String> rules, int n, double probabilityToMiss, StringProcessingListener controller){
+    public void startProcessing(String axiom, List<String> rules, int n, double probabilityToMiss, long seed, StringProcessingListener controller){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(()->{
             try {
-                String command = ls.lsystem(axiom, rules, n, probabilityToMiss);
+                String command = ls.lsystem(axiom, rules, n, probabilityToMiss, seed);
                 controller.finishedStringProcessing(command);
             } catch (RuntimeException re){
                 System.gc();

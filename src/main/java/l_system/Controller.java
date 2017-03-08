@@ -65,7 +65,7 @@ public class Controller implements WindowListener, StringProcessingListener
 		}
 		catch (IOException e1) 
 		{
-			this.l_systems= new ArrayList<L_System>();
+			this.l_systems= new ArrayList<>();
 			e1.printStackTrace();
 		}
 		finally
@@ -89,7 +89,7 @@ public class Controller implements WindowListener, StringProcessingListener
 
 	}
 
-	public void startDrawing(String axiom, List<String> rules, int nIterations, double angle, double probabilityToMiss)
+	public void startDrawing(String axiom, List<String> rules, int nIterations, double angle, double probabilityToMiss, long seed)
 	{
 		if(!this.validArguments(axiom, rules, nIterations, angle, probabilityToMiss))
 		{
@@ -99,7 +99,7 @@ public class Controller implements WindowListener, StringProcessingListener
 		if(process !=null)
 			process.stop();
 		ioPanel.showProgressBar();
-		process.startProcessing(axiom, rules, nIterations, probabilityToMiss, this);
+		process.startProcessing(axiom, rules, nIterations, probabilityToMiss, seed, this);
 		//process = new StringProcessingThread(axiom, rules, nIterations,probabilityToMiss,this);
 		to=new TimeOffset();
 		//process.start();
@@ -114,7 +114,7 @@ public class Controller implements WindowListener, StringProcessingListener
 		if(process !=null)
 			process.stop();
 		ioPanel.showProgressBar();
-		process.startProcessing(l_system.getAxiom(), l_system.getRules(), l_system.getnIterations(), l_system.getProbabilityToMiss(), this);
+		process.startProcessing(l_system.getAxiom(), l_system.getRules(), l_system.getnIterations(), l_system.getProbabilityToMiss(), l_system.getSeed(), this);
 		to=new TimeOffset();
 	}
 	
@@ -178,7 +178,7 @@ public class Controller implements WindowListener, StringProcessingListener
 		this.stopStringProcess();
 		frame.setExtendedState(JFrame.NORMAL);
 		L_System lastState = new L_System(ioPanel.getAxiom(), ioPanel.getRules(), ioPanel.getnIterations(), ioPanel.getAngle(),
-				turtle.getStartingPoint(), turtle.getZoom(), "lastState", ioPanel.getProbabilityToMiss(), ioPanel.getInvisibleChar());
+				turtle.getStartingPoint(), turtle.getZoom(), "lastState", ioPanel.getProbabilityToMiss(), ioPanel.getInvisibleChar(), ioPanel.getSeed());
 		
 		int x=(int) frame.getLocationOnScreen().getX();
 		int y=(int) frame.getLocationOnScreen().getY();
@@ -207,6 +207,7 @@ public class Controller implements WindowListener, StringProcessingListener
 		ioPanel.setAngle(restore.getAngle());
 		ioPanel.setProbabilityToMiss(restore.getProbabilityToMiss());
 		ioPanel.setInvisibleChar(restore.getInvisibleChar());
+		ioPanel.setSeed(restore.getSeed());
 		turtle.setZoom(restore.getZoom());
 		turtle.setStartingPoint(restore.getStartingPoint());
 		this.restoring=true;

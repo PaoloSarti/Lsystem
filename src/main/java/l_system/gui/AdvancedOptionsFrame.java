@@ -6,13 +6,7 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSlider;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -22,27 +16,30 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 {
 
 	private static final long serialVersionUID = 1L;
-	private  final char[] possibleInvisibleChars = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
 	private char invisibleChar;
 	private IOPanel ioPanel;
 	private JSlider slider;
 	private double probabilityToMiss;
 	private JPanel panelProbability;
-	private JPanel invisibleCharPanel;
 	private JButton okButton1;
 	private JButton okButton2;
+	private JButton okButton3;
 	private JComboBox<Character> invisibleCharCombo;
 	private Controller controller;
-	private int width=300;
-	private int height=200;
-	
-	public AdvancedOptionsFrame(double probabilityToMiss, IOPanel ioPanel, Controller controller)throws HeadlessException 
+	private long seed;
+	private JTextField seedField;
+
+	public AdvancedOptionsFrame(double probabilityToMiss, IOPanel ioPanel, long seed, Controller controller)throws HeadlessException
 	{
 		super("Advanced Options");
+
+		this.seed = seed;
 		
 		//si mette al centro del frame
-		int x=(int) (controller.getFrame().getLocationOnScreen().getX()+(controller.getFrame().getWidth()-width)/2);
-		int y=(int) (controller.getFrame().getLocationOnScreen().getY()+(controller.getFrame().getHeight()-height)/2);
+		int width = 300;
+		int x=(int) (controller.getFrame().getLocationOnScreen().getX()+(controller.getFrame().getWidth()- width)/2);
+		int height = 200;
+		int y=(int) (controller.getFrame().getLocationOnScreen().getY()+(controller.getFrame().getHeight()- height)/2);
 		this.setBounds( x, y, width, height);
 		
 		this.ioPanel = ioPanel;
@@ -60,17 +57,18 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 		this.setupSlider();
 		
 		tabs.add("Probability", panelProbability);
-		
-		invisibleCharPanel = new JPanel(new GridLayout(3,1));
+
+		JPanel invisibleCharPanel = new JPanel(new GridLayout(3, 1));
 		invisibleCharPanel.setBackground(Color.white);
 		
 		JLabel invisibleLabel = new JLabel("Set a character that won't be drawn");
 		invisibleCharPanel.add(invisibleLabel);
-		
-		Character[] invisibleChars = new Character[this.possibleInvisibleChars.length];
-		for(int i=0; i<this.possibleInvisibleChars.length; i++)
+
+		char[] possibleInvisibleChars = " abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
+		Character[] invisibleChars = new Character[possibleInvisibleChars.length];
+		for(int i = 0; i< possibleInvisibleChars.length; i++)
 		{
-			invisibleChars[i]=this.possibleInvisibleChars[i];
+			invisibleChars[i]= possibleInvisibleChars[i];
 		}
 		this.invisibleCharCombo= new JComboBox<Character>(invisibleChars);
 		invisibleCharCombo.addActionListener(this);
@@ -80,8 +78,19 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 		invisibleCharPanel.add(okButton2);
 		
 		tabs.addTab("Invisible char", invisibleCharPanel);
-		
-		
+
+		JPanel seedPanel = new JPanel(new GridLayout(3, 1));
+		seedPanel.setBackground(Color.white);
+
+		seedPanel.add(new JLabel("Set Seed"));
+		seedField = new JTextField(""+seed);
+		seedPanel.add(seedField);
+		okButton3 = new JButton("Ok");
+		okButton3.addActionListener(this);
+		seedPanel.add(okButton3);
+
+		tabs.addTab("Set seed", seedPanel);
+
 		this.getContentPane().add(tabs);
 	}
 
@@ -131,11 +140,13 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 	@Override
 	public void actionPerformed(ActionEvent arg0) 
 	{
-		if((arg0.getSource()==okButton1)||(arg0.getSource()==okButton2))
+		if((arg0.getSource()==okButton1)||(arg0.getSource()==okButton2)||(arg0.getSource()==okButton3))
 		{
 			this.setVisible(false);
 			probabilityToMiss=slider.getValue()/100.0;
-			this.controller.startDrawing(ioPanel.getAxiom(), ioPanel.getRules(), ioPanel.getnIterations(), ioPanel.getAngle(), probabilityToMiss);
+			seed =  Long.parseLong(seedField.getText());
+			ioPanel.setSeed(seed);
+			this.controller.startDrawing(ioPanel.getAxiom(), ioPanel.getRules(), ioPanel.getnIterations(), ioPanel.getAngle(), probabilityToMiss, seed);
 		}
 		else if(arg0.getSource()==this.invisibleCharCombo)
 		{

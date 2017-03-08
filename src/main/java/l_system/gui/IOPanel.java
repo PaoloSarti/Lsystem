@@ -49,6 +49,7 @@ public class IOPanel extends JPanel implements ActionListener
 	private JButton advancedButton;
 	private AdvancedOptionsFrame advancedOptionsFrame;
 	private double probabilityToMiss;
+	private long seed = 0L;
 	private JButton saveImageButton;
 	private JProgressBar progressBar;
 	private JFileChooser fileChooser;
@@ -63,7 +64,7 @@ public class IOPanel extends JPanel implements ActionListener
 		this.turtle = turtle;
 		this.probabilityToMiss=0;
 		this.fileChooser=new JFileChooser();
-		this.invisibleChar=' '; //di default tengo questo, che in realtà è un carattere ignorato dal drawer
+		this.invisibleChar=' '; //di default tengo questo, che in real un carattere ignorato dal drawer
 		
 		upperPanel= new JPanel(new GridLayout(12, 1));
 		this.add(upperPanel, BorderLayout.NORTH);
@@ -143,7 +144,7 @@ public class IOPanel extends JPanel implements ActionListener
 			{
 				
 			}
-			controller.startDrawing(axiom, rules, nIterations, angle, probabilityToMiss);
+			controller.startDrawing(axiom, rules, nIterations, angle, probabilityToMiss, seed);
 		}
 		else if(e.getSource()==this.saveButton)
 		{
@@ -155,7 +156,7 @@ public class IOPanel extends JPanel implements ActionListener
 			String name = JOptionPane.showInputDialog(j, "Insert name");
 			if(name!=null)
 			{
-				L_System toSave = new L_System(axiom, rules, nIterations, angle, turtle.getStartingPoint(), turtle.getZoom(), name, probabilityToMiss, invisibleChar);
+				L_System toSave = new L_System(axiom, rules, nIterations, angle, turtle.getStartingPoint(), turtle.getZoom(), name, probabilityToMiss, invisibleChar, seed);
 				controller.saveL_System(toSave);
 			}
 		}
@@ -168,7 +169,7 @@ public class IOPanel extends JPanel implements ActionListener
 			//apri il frame avanzato
 			if(advancedOptionsFrame==null)
 			{
-				advancedOptionsFrame = new AdvancedOptionsFrame(probabilityToMiss, this, controller);
+				advancedOptionsFrame = new AdvancedOptionsFrame(probabilityToMiss, this, seed, controller);
 			}
 			advancedOptionsFrame.setVisible(true);
 			advancedOptionsFrame.setProbabilityToMiss(probabilityToMiss);
@@ -320,5 +321,12 @@ public class IOPanel extends JPanel implements ActionListener
 	{
 		this.invisibleChar = invisibleChar;
 	}
-	
+
+	public long getSeed() {
+		return seed;
+	}
+
+	public void setSeed(long seed) {
+		this.seed = seed;
+	}
 }

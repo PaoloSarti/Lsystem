@@ -16,7 +16,7 @@ public class L_SystemDrawer
 	public L_SystemDrawer(Turtle turtle)
 	{
 		this.turtle=turtle;
-		charColor=new HashMap<Character, Color>();
+		charColor=new HashMap<>();
 	}
 	
 	//A partire dal comando, chiedo al turtlePanel di disegnare
@@ -110,7 +110,7 @@ public class L_SystemDrawer
 								turtle.moveTurtleForward(distance*forwardInvisible, false);
 								forwardInvisible=0;
 							}
-							forward++;  //finchè si va avanti non chiedo di aggiungere punti, appena si curva ne aggiungo uno alla distanza giusta
+							forward++;  //finch si va avanti non chiedo di aggiungere punti, appena si curva ne aggiungo uno alla distanza giusta
 			}
 		}
 		turtle.moveTurtleForward(distance*forward, true);

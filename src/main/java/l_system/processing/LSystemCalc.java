@@ -8,7 +8,7 @@ import java.util.List;
 public interface LSystemCalc {
     String lsystem(String axiom, List<String> rules, int iterations);
 
-    String lsystem(String axiom, List<String> rules, int iterations, double probabilityToMiss);
+    String lsystem(String axiom, List<String> rules, int iterations, double probabilityToMiss, long seed);
 
     void stop();
 }

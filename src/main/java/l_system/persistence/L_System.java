@@ -17,9 +17,14 @@ public class L_System implements Serializable
 	private double zoom;
 	private double probabilityToMiss;
 	private char invisibleChar;
-	
+	private long seed = 0L;
+
+	public L_System(){
+
+	}
+
 	public L_System(String axiom, List<String> rules, int nIterations,
-			double angle, ProportionPoint startingPoint, double zoom, String name, double probabilityToMiss, char invisibleChar) 
+			double angle, ProportionPoint startingPoint, double zoom, String name, double probabilityToMiss, char invisibleChar, long seed)
 	{
 		this.axiom = axiom;
 		this.rules = rules;
@@ -30,20 +35,13 @@ public class L_System implements Serializable
 		this.name=name;
 		this.probabilityToMiss=probabilityToMiss;
 		this.invisibleChar=invisibleChar;
+		this.seed = seed;
 	}
 
 	public L_System(String axiom, List<String> rules, int nIterations,
-			double angle, ProportionPoint startingPoint, double zoom, String name, double probabilityToMiss) 
+			double angle, ProportionPoint startingPoint, double zoom, String name, double probabilityToMiss)
 	{
-		this.axiom = axiom;
-		this.rules = rules;
-		this.nIterations = nIterations;
-		this.angle = angle;
-		this.startingPoint = startingPoint;
-		this.zoom=zoom;
-		this.name=name;
-		this.probabilityToMiss=probabilityToMiss;
-		this.invisibleChar=' ';
+		this(axiom,rules,nIterations,angle,startingPoint,zoom,name,probabilityToMiss,' ', 0L);
 	}
 
 	public String getAxiom() 
@@ -134,4 +132,11 @@ public class L_System implements Serializable
 		return invisibleChar;
 	}
 
+	public long getSeed() {
+		return seed;
+	}
+
+	public void setSeed(long seed) {
+		this.seed = seed;
+	}
 }
