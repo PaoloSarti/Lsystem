@@ -16,6 +16,7 @@ import javax.swing.*;
 
 import l_system.processing.LSystemProcessing;
 import l_system.processing.StreamLsystem;
+import l_system.processing.StreamLsystemold;
 import timeOffset.TimeOffset;
 //import timeOffset.TimeOffset;
 import l_system.gui.IOPanel;
@@ -121,7 +122,8 @@ public class Controller implements WindowListener, StringProcessingListener
 	public void finishedStringProcessing(String command)
 	{
 		this.millisecondsLastCalculations=to.getOffsetMillis();
-		System.out.println("Milliseconds to process String: "+this.millisecondsLastCalculations);
+		//System.out.println("Milliseconds to process String: "+this.millisecondsLastCalculations);
+		//System.out.println("Computed string: "+command);
 		this.ioPanel.setMilliseconds(millisecondsLastCalculations);
 		drawer.draw(command, 0.05, ioPanel.getAngle(), turtle.getStartingPoint(),
 				turtle.getZoom(),ioPanel.getInvisibleChar(), !restoring||ioPanel.getProbabilityToMiss()>0);

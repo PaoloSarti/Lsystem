@@ -1,0 +1,1 @@
+{"name":"Escher","axiom":"A-A-A-A-A-A","rules":["A\u003dBAB[-BA-AB]BAB","B\u003dBB"],"nIterations":8,"angle":1.0471975511965976,"startingPoint":{"x":0.06698729810777942,"y":0.7500000000000006,"visible":false,"color":{"value":-16777216,"falpha":0.0}},"zoom":0.0022977941176470554,"probabilityToMiss":0.0,"invisibleChar":" "}
