@@ -16,24 +16,19 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 {
 
 	private static final long serialVersionUID = 1L;
-	private char invisibleChar;
 	private IOPanel ioPanel;
 	private JSlider slider;
-	private double probabilityToMiss;
 	private JPanel panelProbability;
 	private JButton okButton1;
 	private JButton okButton2;
 	private JButton okButton3;
 	private JComboBox<Character> invisibleCharCombo;
 	private Controller controller;
-	private long seed;
 	private JTextField seedField;
 
 	public AdvancedOptionsFrame(double probabilityToMiss, IOPanel ioPanel, long seed, Controller controller)throws HeadlessException
 	{
 		super("Advanced Options");
-
-		this.seed = seed;
 		
 		//si mette al centro del frame
 		int width = 300;
@@ -43,7 +38,6 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 		this.setBounds( x, y, width, height);
 		
 		this.ioPanel = ioPanel;
-		this.probabilityToMiss=probabilityToMiss;
 		this.controller=controller;
 		
 		JTabbedPane tabs = new JTabbedPane();
@@ -54,7 +48,7 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 		JLabel probabilityLabel = new JLabel("Set the probability to miss the rule:");
 		panelProbability.add(probabilityLabel);
 		
-		this.setupSlider();
+		this.setupSlider(probabilityToMiss);
 		
 		tabs.add("Probability", panelProbability);
 
@@ -70,7 +64,7 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 		{
 			invisibleChars[i]= possibleInvisibleChars[i];
 		}
-		this.invisibleCharCombo= new JComboBox<Character>(invisibleChars);
+		this.invisibleCharCombo= new JComboBox<>(invisibleChars);
 		invisibleCharCombo.addActionListener(this);
 		invisibleCharPanel.add(invisibleCharCombo);
 		this.okButton2=new JButton("Ok");
@@ -94,7 +88,7 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 		this.getContentPane().add(tabs);
 	}
 
-	private void setupSlider()
+	private void setupSlider(double probabilityToMiss)
 	{
 		slider= new JSlider(JSlider.HORIZONTAL, 0, 100,(int) (probabilityToMiss*100));
 		slider.addChangeListener(this);
@@ -111,19 +105,11 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 	public void stateChanged(ChangeEvent arg0) 
 	{
 		ioPanel.setProbabilityToMiss(slider.getValue()/100.0);
-		this.probabilityToMiss=slider.getValue();
-	}
-
-
-	public double getProbabilityToMiss()
-	{
-		return probabilityToMiss;
 	}
 
 	//It has to update the slider
 	public void setProbabilityToMiss(double probabilityToMiss) 
 	{
-		this.probabilityToMiss = probabilityToMiss;
 		JSlider sliderUpdate= new JSlider(JSlider.HORIZONTAL, 0, 100,(int) (probabilityToMiss*100));
 		sliderUpdate.addChangeListener(this);
 		sliderUpdate.setPaintLabels(true);
@@ -143,27 +129,24 @@ public class AdvancedOptionsFrame extends JFrame implements ChangeListener, Acti
 		if((arg0.getSource()==okButton1)||(arg0.getSource()==okButton2)||(arg0.getSource()==okButton3))
 		{
 			this.setVisible(false);
-			probabilityToMiss=slider.getValue()/100.0;
-			seed =  Long.parseLong(seedField.getText());
+			double probabilityToMiss=slider.getValue()/100.0;
+			long seed =  Long.parseLong(seedField.getText());
 			ioPanel.setSeed(seed);
 			this.controller.startDrawing(ioPanel.getAxiom(), ioPanel.getRules(), ioPanel.getnIterations(), ioPanel.getAngle(), probabilityToMiss, seed);
 		}
 		else if(arg0.getSource()==this.invisibleCharCombo)
 		{
-			invisibleChar=(Character)this.invisibleCharCombo.getSelectedItem();
+			Character invisibleChar=(Character)this.invisibleCharCombo.getSelectedItem();
 			ioPanel.setInvisibleChar(invisibleChar);
 		}
 	}
 
-	public char getInvisibleChar() 
-	{
-		return invisibleChar;
-	}
-
 	public void setInvisibleChar(char invisibleChar) 
 	{
-		this.invisibleChar = invisibleChar;
 		this.invisibleCharCombo.setSelectedItem(new Character(invisibleChar));
 	}
-	
+
+	public void setSeed(long seed) {
+		this.seedField.setText(""+seed);
+	}
 }

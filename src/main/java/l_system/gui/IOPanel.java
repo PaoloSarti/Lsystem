@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.util.StringTokenizer;
 
 import javax.swing.JButton;
@@ -144,6 +145,8 @@ public class IOPanel extends JPanel implements ActionListener
 			{
 				
 			}
+			Random r = new Random();
+			this.seed = r.nextLong();
 			controller.startDrawing(axiom, rules, nIterations, angle, probabilityToMiss, seed);
 		}
 		else if(e.getSource()==this.saveButton)
@@ -171,9 +174,10 @@ public class IOPanel extends JPanel implements ActionListener
 			{
 				advancedOptionsFrame = new AdvancedOptionsFrame(probabilityToMiss, this, seed, controller);
 			}
-			advancedOptionsFrame.setVisible(true);
 			advancedOptionsFrame.setProbabilityToMiss(probabilityToMiss);
 			advancedOptionsFrame.setInvisibleChar(invisibleChar);
+			advancedOptionsFrame.setSeed(seed);
+			advancedOptionsFrame.setVisible(true);
 		}
 		else if(e.getSource()==this.saveImageButton)
 		{
